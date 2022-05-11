@@ -16,9 +16,11 @@ const reducer = (state, action) => {
     case 'DECREMENT':
       return { ...state, count: state.count-- };
     case 'RESET':
+      console.log('RESET');
       return { ...state, count: 0 };
     case 'CHANGE_COLOR':
-      return { ...state, color: action.payload };
+      console.log('CHANGE_COLOR');
+      return { ...state, color: action.payload.color };
     default:
       throw new Error('Invalid action performed in reducer.');
   }
@@ -30,21 +32,21 @@ export default function Counter() {
   useEffect(() => {
     if (state.count === 0) {
       console.log('Yellow');
-      dispatch({ type: 'CHANGE_COLOR', payload: colors.yellow });
+      dispatch({ type: 'CHANGE_COLOR', payload: { color: colors.yellow } });
     }
 
     if (state.count > 0) {
       console.log('Green');
 
-      dispatch({ type: 'CHANGE_COLOR', payload: colors.green });
+      dispatch({ type: 'CHANGE_COLOR', payload: { color: colors.green } });
     }
 
     if (state.count < 0) {
       console.log('Red');
 
-      dispatch({ type: 'CHANGE_COLOR', payload: colors.red });
+      dispatch({ type: 'CHANGE_COLOR', payload: { color: colors.red } });
     }
-  }, [state.color]);
+  }, [state.count]);
 
   const increment = () => {
     dispatch({ type: 'INCREMENT' });
