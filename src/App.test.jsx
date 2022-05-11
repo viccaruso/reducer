@@ -17,6 +17,7 @@ it('should increment the counter when increment pressed', () => {
 
   const incrementButton = screen.getByRole('button', { name: 'increment' });
   userEvent.click(incrementButton);
+  screen.debug();
   expect(counter).toHaveTextContent('1');
   expect(counter).toHaveStyle(`color: ${green}`);
 
