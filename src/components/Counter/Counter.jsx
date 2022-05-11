@@ -7,6 +7,25 @@ const colors = {
   red: 'rgb(239, 68, 68)',
 };
 
+const counterState = { count: 0, color: 'yellow' };
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'increment':
+      return { ...state, count: state.count++ };
+    case 'decrement':
+      return { ...state, count: state.count-- };
+    case 'yellow':
+      return { ...state, color: 'rgb(236, 222, 153)' };
+    case 'green':
+      return { ...state, color: 'rgb(52, 211, 153)' };
+    case 'red':
+      return { ...state, color: 'rgb(239, 68, 68)' };
+    default:
+      throw new Error('Invalid action performed in reducer.');
+  }
+};
+
 export default function Counter() {
   const [count, setCount] = useState(0);
   const [currentColor, setCurrentColor] = useState(colors.yellow);
