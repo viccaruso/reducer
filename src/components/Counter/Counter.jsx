@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import styles from './Counter.css';
 
 const colors = {
@@ -7,20 +7,18 @@ const colors = {
   red: 'rgb(239, 68, 68)',
 };
 
-const counterState = { count: 0, color: 'yellow' };
+const counterState = { count: 0, color: 'red' };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'increment':
+    case 'INCREMENT':
       return { ...state, count: state.count++ };
-    case 'decrement':
+    case 'DECREMENT':
       return { ...state, count: state.count-- };
-    case 'yellow':
-      return { ...state, color: 'rgb(236, 222, 153)' };
-    case 'green':
-      return { ...state, color: 'rgb(52, 211, 153)' };
-    case 'red':
-      return { ...state, color: 'rgb(239, 68, 68)' };
+    case 'RESET':
+      return { ...state, count: 0 };
+    case 'CHANGE_COLOR':
+      return { ...state, color: action.payload };
     default:
       throw new Error('Invalid action performed in reducer.');
   }
@@ -30,34 +28,39 @@ export default function Counter() {
   const [state, dispatch] = useReducer(reducer, counterState);
 
   useEffect(() => {
-    if (count === 0) {
-      setCurrentColor(colors.yellow);
+    if (state.count === 0) {
+      console.log('Yellow');
+      dispatch({ type: 'CHANGE_COLOR', payload: colors.yellow });
     }
 
-    if (count > 0) {
-      setCurrentColor(colors.green);
+    if (state.count > 0) {
+      console.log('Green');
+
+      dispatch({ type: 'CHANGE_COLOR', payload: colors.green });
     }
 
-    if (count < 0) {
-      setCurrentColor(colors.red);
+    if (state.count < 0) {
+      console.log('Red');
+
+      dispatch({ type: 'CHANGE_COLOR', payload: colors.red });
     }
-  }, [count]);
+  }, [state.color]);
 
   const increment = () => {
-    setCount((prevState) => prevState + 1);
+    dispatch({ type: 'INCREMENT' });
   };
 
   const decrement = () => {
-    setCount((prevState) => prevState - 1);
+    dispatch({ type: 'DECREMENT' });
   };
 
   const reset = () => {
-    setCount(0);
+    dispatch({ type: 'RESET' });
   };
 
   return (
     <main className={styles.main}>
-      <h1 style={{ color: currentColor }}>{count}</h1>
+      <h1 style={{ color: state.color }}>{state.count}</h1>
       <div>
         <button
           type="button"
