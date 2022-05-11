@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import styles from './Counter.css';
 
 const colors = {
@@ -7,39 +7,55 @@ const colors = {
   red: 'rgb(239, 68, 68)',
 };
 
+const counterState = { count: 0, color: '' };
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return { ...state, count: state.count + 1 };
+    case 'DECREMENT':
+      return { ...state, count: state.count - 1 };
+    case 'RESET':
+      return { ...state, count: 0 };
+    case 'CHANGE_COLOR':
+      return { ...state, color: action.payload.color };
+    default:
+      throw new Error('Invalid action performed in reducer.');
+  }
+};
+
 export default function Counter() {
-  const [count, setCount] = useState(0);
-  const [currentColor, setCurrentColor] = useState(colors.yellow);
+  const [state, dispatch] = useReducer(reducer, counterState);
 
   useEffect(() => {
-    if (count === 0) {
-      setCurrentColor(colors.yellow);
+    if (state.count === 0) {
+      dispatch({ type: 'CHANGE_COLOR', payload: { color: colors.yellow } });
     }
 
-    if (count > 0) {
-      setCurrentColor(colors.green);
+    if (state.count > 0) {
+      dispatch({ type: 'CHANGE_COLOR', payload: { color: colors.green } });
     }
 
-    if (count < 0) {
-      setCurrentColor(colors.red);
+    if (state.count < 0) {
+      dispatch({ type: 'CHANGE_COLOR', payload: { color: colors.red } });
     }
-  }, [count]);
+  }, [state.count]);
 
   const increment = () => {
-    setCount((prevState) => prevState + 1);
+    dispatch({ type: 'INCREMENT' });
   };
 
   const decrement = () => {
-    setCount((prevState) => prevState - 1);
+    dispatch({ type: 'DECREMENT' });
   };
 
   const reset = () => {
-    setCount(0);
+    dispatch({ type: 'RESET' });
   };
 
   return (
     <main className={styles.main}>
-      <h1 style={{ color: currentColor }}>{count}</h1>
+      <h1 style={{ color: state.color }}>{state.count}</h1>
       <div>
         <button
           type="button"
